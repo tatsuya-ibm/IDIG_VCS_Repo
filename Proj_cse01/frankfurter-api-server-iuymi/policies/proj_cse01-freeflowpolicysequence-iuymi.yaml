@@ -1,0 +1,16 @@
+kind: FreeFlowPolicySequence
+apiVersion: api.ibm.com/v1
+metadata:
+  name: proj_cse01-freeflowpolicysequence-iuymi
+  namespace: Proj_cse01
+  version: "1.0"
+  tags: []
+  domain: mcp
+  labels:
+    gatewayTypes:
+      - nano
+spec:
+  main:
+    - $ref: Proj_cse01:invoke-iuymi:1.0
+  monitoring:
+    $ref: Proj_cse01:telemetry-iuymi:1.0

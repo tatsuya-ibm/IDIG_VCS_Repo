@@ -1,0 +1,20 @@
+kind: MCPServer
+apiVersion: api.ibm.com/v1
+metadata:
+  name: frankfurter
+  namespace: Proj_cse01
+  version: '1.0'
+  tags: []
+  domain: mcp
+  labels:
+    origin: mcp-rest
+spec:
+  title: Frankfurter API MCP Server
+  protocolVersion: V2025_11_25
+  plans:
+    - $ref: Proj_cse01:proj_cse01-plan-iuymi:1.0
+  policy-sequence:
+    - $ref: Proj_cse01:proj_cse01-freeflowpolicysequence-iuymi:1.0
+  capabilities:
+    tools:
+      - $ref: Proj_cse01:frankfurter-api-tool-iuymi:1.0

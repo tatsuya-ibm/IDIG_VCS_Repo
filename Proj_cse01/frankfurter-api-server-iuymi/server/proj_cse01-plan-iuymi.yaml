@@ -1,0 +1,14 @@
+kind: Plan
+apiVersion: api.ibm.com/v1
+metadata:
+  name: proj_cse01-plan-iuymi
+  namespace: Proj_cse01
+  version: "1.0"
+  tags: []
+  description: ""
+  domain: mcp
+spec:
+  qos:
+    withQuota:
+      proj_cse01-plan-iuymi-limit:
+        - $ref: Proj_cse01:proj_cse01-quota-iuymi:1.0

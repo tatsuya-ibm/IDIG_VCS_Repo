@@ -1,0 +1,115 @@
+kind: MCPTools
+apiVersion: api.ibm.com/v1
+metadata:
+  name: frankfurter-api-tool-iuymi
+  namespace: Proj_cse01
+  version: "1.0"
+  tags: []
+  description: Frankfurter is an open-source API for current and historical
+    foreign exchange rates, sourcing currency data from public providers like
+    the European Central Bank.
+  domain: mcp
+  labels:
+    api-spec: ./frankfurter-api-spec.yml
+spec:
+  tools:
+    - name: get_latest
+      description: Returns the last working day's rates
+      inputSchema:
+        type: object
+        properties:
+          base:
+            description: Base currency to convert from
+            x-parameter-location: query
+            type: object
+            properties: {}
+            enum: &a1
+              - AUD
+              - BGN
+              - BRL
+              - CAD
+              - CHF
+              - CNY
+              - CZK
+              - DKK
+              - EUR
+              - GBP
+              - HKD
+              - HUF
+              - IDR
+              - ILS
+              - INR
+              - ISK
+              - JPY
+              - KRW
+              - MXN
+              - MYR
+              - NOK
+              - NZD
+              - PHP
+              - PLN
+              - RON
+              - SEK
+              - SGD
+              - THB
+              - TRY
+              - USD
+              - ZAR
+          symbols:
+            description: Comma-separated list of currencies to convert to
+            x-parameter-location: query
+            type: array
+            items: &a2
+              type: string
+              enum: *a1
+              description: The base currency code following ISO4217
+            minItems: 1
+      title: Get the latest rates
+      x-api-binding:
+        operationPath: /latest
+        operationMethod: GET
+        api:
+          $path: ./frankfurter-api-spec.yml
+    - name: get_date
+      description: Returns historical rates for the working day closest to the
+        specified date
+      inputSchema:
+        type: object
+        properties:
+          date:
+            description: The date for the historical rates
+            x-parameter-location: path
+            type: string
+            format: date
+            example: 2024-01-15
+          base:
+            description: Base currency to convert from
+            x-parameter-location: query
+            type: object
+            properties: {}
+            enum: *a1
+          symbols:
+            description: Comma-separated list of currencies to convert to
+            x-parameter-location: query
+            type: array
+            items: *a2
+            minItems: 1
+        required:
+          - date
+      title: Get rates for a past date
+      x-api-binding:
+        operationPath: /{date}
+        operationMethod: GET
+        api:
+          $path: ./frankfurter-api-spec.yml
+    - name: get_currencies
+      description: Returns a list of available currencies with their full names
+      inputSchema:
+        type: object
+        properties: {}
+      title: Get available currencies
+      x-api-binding:
+        operationPath: /currencies
+        operationMethod: GET
+        api:
+          $path: ./frankfurter-api-spec.yml
