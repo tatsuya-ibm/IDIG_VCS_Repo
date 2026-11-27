@@ -1,0 +1,17 @@
+kind: FreeFlowPolicySequence
+apiVersion: api.ibm.com/v1
+metadata:
+  name: proj_sample-freeflowpolicysequence-q2bby
+  namespace: Proj_sample
+  version: '1.0'
+  tags: []
+  labels:
+    gatewayTypes:
+      - nano
+  domain: mcp
+spec:
+  main:
+    - $ref: Proj_sample:Set-b0fib:1.0
+    - $ref: Proj_sample:invoke-q2bby:1.0
+  monitoring:
+    $ref: Proj_sample:telemetry-q2bby:1.0

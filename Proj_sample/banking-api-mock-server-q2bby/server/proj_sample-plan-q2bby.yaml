@@ -1,0 +1,14 @@
+kind: Plan
+apiVersion: api.ibm.com/v1
+metadata:
+  name: proj_sample-plan-q2bby
+  namespace: Proj_sample
+  version: "1.0"
+  tags: []
+  description: ""
+  domain: mcp
+spec:
+  qos:
+    withQuota:
+      proj_sample-plan-q2bby-limit:
+        - $ref: Proj_sample:proj_sample-quota-q2bby:1.0

@@ -1,0 +1,16 @@
+kind: FreeFlowPolicySequence
+apiVersion: api.ibm.com/v1
+metadata:
+  name: proj_sample-freeflowpolicysequence-4yev8
+  namespace: Proj_sample
+  version: "1.0"
+  tags: []
+  domain: mcp
+  labels:
+    gatewayTypes:
+      - nano
+spec:
+  main:
+    - $ref: Proj_sample:invoke-4yev8:1.0
+  monitoring:
+    $ref: Proj_sample:telemetry-4yev8:1.0

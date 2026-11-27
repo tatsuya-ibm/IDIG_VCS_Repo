@@ -1,0 +1,24 @@
+kind: Invoke
+apiVersion: api.ibm.com/v1
+metadata:
+  name: invoke-q2bby
+  namespace: Proj_sample
+  version: "1.0"
+  tags: []
+  domain: mcp
+  labels:
+    gatewayTypes:
+      - nano
+spec:
+  endpoint:
+    http:
+      target:
+        tlsClientProfile: sample-tls-client-profile:1.0.0
+        url: "'https://banking-api-mock.2gunicbm44qw.jp-tok.codeengine.appdomain.cloud'
+          & $pathAndQuery()"
+        urlType: jsonata
+        persistentConnections: false
+        timeout: 30
+        decompressResponse: true
+        followRedirects: false
+        chunkedUpload: false

@@ -1,0 +1,922 @@
+servers:
+  - url: https://banking-api-mock.2gunicbm44qw.jp-tok.codeengine.appdomain.cloud
+    description: �ï���REST API
+    variables:
+      host:
+        default: banking-api.example.com
+        description: ��n�ï���۹�kn�WfO`UD
+components:
+  schemas:
+    Account:
+      required:
+        - accountId
+        - accountNumber
+        - customerId
+        - accountType
+        - balance
+        - status
+        - openedAt
+        - updatedAt
+      type: object
+      properties:
+        accountId:
+          type: string
+          example: A2000
+        accountNumber:
+          pattern: ^[0-9]{7}$
+          type: string
+          example: "0002000"
+        customerId:
+          type: string
+          example: C1000
+        accountType:
+          enum:
+            - SAVINGS
+            - FIXED
+            - CHECKING
+          type: string
+        balance:
+          format: double
+          minimum: 0
+          type: number
+          example: 100000
+        status:
+          enum:
+            - ACTIVE
+            - FROZEN
+            - CLOSED
+          type: string
+        openedAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        updatedAt:
+          $ref: "#/components/schemas/LocalDateTime"
+      additionalProperties: false
+    AccountCreateRequest:
+      required:
+        - customerId
+        - accountType
+      type: object
+      properties:
+        customerId:
+          type: string
+          example: C1000
+        accountType:
+          enum:
+            - SAVINGS
+            - FIXED
+            - CHECKING
+          type: string
+        balance:
+          format: double
+          default: 0
+          minimum: 0
+          type: number
+      additionalProperties: false
+    AccountList:
+      required:
+        - accounts
+      type: object
+      properties:
+        accounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Account"
+      additionalProperties: false
+    AmountRequest:
+      required:
+        - amount
+      type: object
+      properties:
+        amount:
+          format: double
+          minimum: 0
+          type: number
+          example: 10000
+        description:
+          maxLength: 200
+          type: string
+      additionalProperties: false
+    Customer:
+      required:
+        - customerId
+        - fullName
+        - fullNameKana
+        - dateOfBirth
+        - phoneNumber
+        - email
+        - postalCode
+        - address
+        - status
+        - createdAt
+        - updatedAt
+      type: object
+      properties:
+        customerId:
+          type: string
+          example: C1000
+        fullName:
+          type: string
+          example: q0 *�
+        fullNameKana:
+          type: string
+          example: ��� ���
+        dateOfBirth:
+          $ref: "#/components/schemas/LocalDate"
+        phoneNumber:
+          type: string
+          example: 090-1234-5678
+        email:
+          format: email
+          type: string
+          example: taro.yamada@example.com
+        postalCode:
+          pattern: ^[0-9]{3}-?[0-9]{4}$
+          type: string
+          example: 100-0001
+        address:
+          type: string
+          example: q��C�0:C�01-1
+        status:
+          enum:
+            - ACTIVE
+            - SUSPENDED
+            - CLOSED
+          type: string
+        createdAt:
+          $ref: "#/components/schemas/LocalDateTime"
+        updatedAt:
+          $ref: "#/components/schemas/LocalDateTime"
+      additionalProperties: false
+    CustomerCreateRequest:
+      required:
+        - fullName
+        - fullNameKana
+        - dateOfBirth
+        - phoneNumber
+        - email
+        - postalCode
+        - address
+      type: object
+      properties:
+        fullName:
+          type: string
+        fullNameKana:
+          type: string
+        dateOfBirth:
+          $ref: "#/components/schemas/LocalDate"
+        phoneNumber:
+          type: string
+        email:
+          format: email
+          type: string
+        postalCode:
+          pattern: ^[0-9]{3}-?[0-9]{4}$
+          type: string
+        address:
+          type: string
+      additionalProperties: false
+    CustomerList:
+      required:
+        - customers
+      type: object
+      properties:
+        customers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Customer"
+      additionalProperties: false
+    CustomerUpdateRequest:
+      minProperties: 1
+      type: object
+      properties:
+        fullName:
+          type: string
+        fullNameKana:
+          type: string
+        dateOfBirth:
+          $ref: "#/components/schemas/LocalDate"
+        phoneNumber:
+          type: string
+        email:
+          format: email
+          type: string
+        postalCode:
+          pattern: ^[0-9]{3}-?[0-9]{4}$
+          type: string
+        address:
+          type: string
+      additionalProperties: false
+    ErrorResponse:
+      required:
+        - errorCode
+        - message
+      type: object
+      properties:
+        errorCode:
+          type: string
+          example: RESOURCE_NOT_FOUND
+        message:
+          type: string
+          example: �U�_���L�dK�~[�
+      additionalProperties: false
+    ExchangeRate:
+      required:
+        - currencyCode
+        - currencyName
+        - buyRate
+        - sellRate
+        - updatedAt
+      type: object
+      properties:
+        currencyCode:
+          pattern: ^[A-Z]{3}$
+          type: string
+          example: USD
+        currencyName:
+          type: string
+          example: s��
+        buyRate:
+          format: double
+          type: number
+          example: 155.2
+        sellRate:
+          format: double
+          type: number
+          example: 153.8
+        updatedAt:
+          $ref: "#/components/schemas/LocalDateTime"
+      additionalProperties: false
+    ExchangeRateList:
+      required:
+        - exchangeRates
+      type: object
+      properties:
+        exchangeRates:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExchangeRate"
+      additionalProperties: false
+    LocalDate:
+      format: date
+      type: string
+      example: 2022-03-10T00:00:00.000Z
+    LocalDateTime:
+      format: date-time
+      type: string
+      example: 2022-03-10T12:15:50.000Z
+    Transaction:
+      required:
+        - transactionId
+        - accountId
+        - transactionType
+        - amount
+        - balanceAfter
+        - transactedAt
+      type: object
+      properties:
+        transactionId:
+          type: string
+        accountId:
+          type: string
+        transactionType:
+          enum:
+            - DEPOSIT
+            - WITHDRAWAL
+            - TRANSFER_IN
+            - TRANSFER_OUT
+          type: string
+        amount:
+          format: double
+          minimum: 0
+          type: number
+        balanceAfter:
+          format: double
+          type: number
+        description:
+          type: string
+        relatedAccountNumber:
+          pattern: ^[0-9]{7}$
+          type: string
+        transactedAt:
+          $ref: "#/components/schemas/LocalDateTime"
+      additionalProperties: false
+    TransactionList:
+      required:
+        - transactions
+      type: object
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Transaction"
+      additionalProperties: false
+    TransferRequest:
+      required:
+        - fromAccountNumber
+        - toAccountNumber
+        - amount
+      type: object
+      properties:
+        fromAccountNumber:
+          pattern: ^[0-9]{7}$
+          type: string
+        toAccountNumber:
+          pattern: ^[0-9]{7}$
+          type: string
+        amount:
+          format: double
+          minimum: 0
+          type: number
+        description:
+          maxLength: 200
+          type: string
+      additionalProperties: false
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: X-API-Key����kAPI����W~Y
+      name: X-API-Key
+      in: header
+    BearerAuth:
+      type: http
+      description: "Authorization: Bearer <token>��W~Y"
+      scheme: bearer
+      bearerFormat: JWT
+openapi: 3.0.3
+tags:
+  - name: Accounts
+    description: �n�-�g��P��
+  - name: Customers
+    description: g��1n{2�g���������	�
+  - name: ExchangeRates
+    description: �����g
+  - name: Transactions
+    description: e�����/��h�etg
+paths:
+  /api/v1/accounts:
+    post:
+      summary: 㧋-
+      description: ��㧒�-W~YaccountIdhaccountNumbero����L�աjW~Y
+      operationId: createAccount
+      tags:
+        - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountCreateRequest"
+        required: true
+      responses:
+        "201":
+          description: �-�
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        "400":
+          description: e����g�X(ji	
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: �<���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - BearerAuth: []
+  /api/v1/accounts/customer/{customerId}:
+    get:
+      summary: g�� �֗
+      description: �W_g�L�	Y��n ���W~Y
+      operationId: getAccountsByCustomer
+      tags:
+        - Accounts
+      parameters:
+        - description: g�ID
+          name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountList"
+        "401":
+          description: �<���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - ApiKeyAuth: []
+  /api/v1/accounts/number/{accountNumber}:
+    get:
+      summary: �֗�j��	
+      description: �j�g��1�1�֗W~Y
+      operationId: getAccountByNumber
+      tags:
+        - Accounts
+      parameters:
+        - description: �j�7A	
+          schema:
+            pattern: ^[0-9]{7}$
+            type: string
+            example: "0002000"
+          name: accountNumber
+          in: path
+          required: true
+      responses:
+        "200":
+          description: ��1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        "401":
+          description: �<���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: �L�dK�jD
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - ApiKeyAuth: []
+  /api/v1/accounts/{accountId}:
+    get:
+      summary: �֗ID�	
+      description: �IDg��1�1�֗W~Y
+      operationId: getAccountById
+      tags:
+        - Accounts
+      parameters:
+        - description: �ID
+          schema:
+            type: string
+            example: A2000
+          name: accountId
+          in: path
+          required: true
+      responses:
+        "200":
+          description: ��1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        "401":
+          description: �<���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: �L�dK�jD
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - ApiKeyAuth: []
+  /api/v1/accounts/{accountId}/deposit:
+    post:
+      summary: e�
+      description: ��ke���LD~Y
+      operationId: depositToAccount
+      tags:
+        - Transactions
+      parameters:
+        - description: e�H�ID
+          name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AmountRequest"
+        required: true
+      responses:
+        "200":
+          description: e�������
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "400":
+          description: e�����X(������p8ji	
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: �<���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - BearerAuth: []
+  /api/v1/accounts/{accountId}/status:
+    put:
+      summary: 㧹����	�
+      description: �n������	�W~Y
+      operationId: updateAccountStatus
+      tags:
+        - Accounts
+      parameters:
+        - description: �ID
+          name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: ������
+          required: true
+          schema:
+            enum:
+              - ACTIVE
+              - FROZEN
+              - CLOSED
+            type: string
+          name: status
+          in: query
+      responses:
+        "200":
+          description: 	��
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        "401":
+          description: �<���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: �L�dK�jD
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - BearerAuth: []
+  /api/v1/accounts/{accountId}/transactions:
+    get:
+      summary: �etg
+      description: ��n�et��WDk�W~Y
+      operationId: getAccountTransactions
+      tags:
+        - Transactions
+      parameters:
+        - description: �ID
+          name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: �et��
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionList"
+        "401":
+          description: �<���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - ApiKeyAuth: []
+  /api/v1/accounts/{accountId}/withdrawal:
+    post:
+      summary: ��
+      description: ��K�����LD~Y
+      operationId: withdrawFromAccount
+      tags:
+        - Transactions
+      parameters:
+        - description: ��C�ID
+          name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AmountRequest"
+        required: true
+      responses:
+        "200":
+          description: ��������
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "400":
+          description: e�������ji	
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: �<���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - BearerAuth: []
+  /api/v1/customers:
+    get:
+      summary: g� �֗
+      description: {2U�fD�g� ���W~Y
+      operationId: getCustomers
+      tags:
+        - Customers
+      parameters:
+        - description: ~_o���n� �"�����
+          required: false
+          schema:
+            type: string
+          name: keyword
+          in: query
+      responses:
+        "200":
+          description: g���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerList"
+        "401":
+          description: �<���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - ApiKeyAuth: []
+    post:
+      summary: g�{2
+      description: ��g��{2W~YcustomerIdo����L�աjW~Y
+      operationId: createCustomer
+      tags:
+        - Customers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerCreateRequest"
+        required: true
+      responses:
+        "201":
+          description: {2�
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "400":
+          description: e����
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: �<���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - BearerAuth: []
+  /api/v1/customers/{customerId}:
+    patch:
+      summary: g���
+      description: g��1����W~Y
+      operationId: updateCustomer
+      tags:
+        - Customers
+      parameters:
+        - description: ���ang�ID
+          name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerUpdateRequest"
+        required: true
+      responses:
+        "200":
+          description: ���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "400":
+          description: e����
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: �<���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: g�L�dK�jD
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - BearerAuth: []
+    get:
+      summary: g�֗
+      description: g�ID��Wfg��1�1�֗W~Y
+      operationId: getCustomerById
+      tags:
+        - Customers
+      parameters:
+        - description: g�ID
+          schema:
+            type: string
+            example: C1000
+          name: customerId
+          in: path
+          required: true
+      responses:
+        "200":
+          description: g��1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "401":
+          description: �<���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: g�L�dK�jD
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - ApiKeyAuth: []
+  /api/v1/customers/{customerId}/status:
+    put:
+      summary: g������	�
+      description: g�n������	�W~Y
+      operationId: updateCustomerStatus
+      tags:
+        - Customers
+      parameters:
+        - description: g�ID
+          name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: ������
+          required: true
+          schema:
+            enum:
+              - ACTIVE
+              - SUSPENDED
+              - CLOSED
+            type: string
+          name: status
+          in: query
+      responses:
+        "200":
+          description: 	��
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "401":
+          description: �<���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: g�L�dK�jD
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - BearerAuth: []
+  /api/v1/exchange-rates:
+    get:
+      summary: ����� �֗
+      description: h�n������Ȓ�W~Y
+      operationId: getExchangeRates
+      tags:
+        - ExchangeRates
+      responses:
+        "200":
+          description: �������
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExchangeRateList"
+      security: []
+  /api/v1/exchange-rates/{currencyCode}:
+    get:
+      summary: �%�����֗
+      description: ISO 4217���ɒ�Wf����Ȓ1�֗W~Y
+      operationId: getExchangeRate
+      tags:
+        - ExchangeRates
+      parameters:
+        - description: ISO 4217����
+          schema:
+            pattern: ^[A-Z]{3}$
+            type: string
+            example: USD
+          name: currencyCode
+          in: path
+          required: true
+      responses:
+        "200":
+          description: �����
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExchangeRate"
+        "404":
+          description: �L�dK�jD
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security: []
+  /api/v1/transfers:
+    post:
+      summary: /�
+      description: �C�K��H�x/��LD~Y
+      operationId: transferFunds
+      tags:
+        - Transactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransferRequest"
+        required: true
+      responses:
+        "200":
+          description: /�������
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "400":
+          description: e�����X(����ji	
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: �<���
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - BearerAuth: []
+info:
+  title: Banking API Mock
+  version: 1.1.0
+  description: IDIGxn�����J�sMCP Tool��W_э_�m��ïAPI
+  contact:
+    name: Development Team
+    email: dev-team@example.com

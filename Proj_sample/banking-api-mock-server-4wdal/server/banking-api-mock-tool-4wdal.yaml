@@ -1,0 +1,236 @@
+kind: MCPTools
+apiVersion: api.ibm.com/v1
+metadata:
+  name: banking-api-mock-tool-4wdal
+  namespace: Proj_sample
+  version: "1.0"
+  tags: []
+  description: IDIGxn�����J�sMCP Tool��W_э_�m��ïAPI
+  domain: mcp
+  labels:
+    api-spec: ./banking-api-mock-spec.yml
+spec:
+  tools:
+    - name: createAccount
+      description: ��㧒�-W~YaccountIdhaccountNumbero����L�աjW~Y
+      inputSchema:
+        type: object
+        properties:
+          customerId:
+            type: string
+            example: C1000
+          accountType:
+            enum:
+              - SAVINGS
+              - FIXED
+              - CHECKING
+            type: string
+          balance:
+            format: double
+            default: 0
+            minimum: 0
+            type: number
+        required:
+          - customerId
+          - accountType
+      title: 㧋-
+      x-api-binding:
+        operationPath: /api/v1/accounts
+        operationMethod: POST
+        api:
+          $path: ./banking-api-mock-spec.yml
+    - name: depositToAccount
+      description: ��ke���LD~Y
+      inputSchema:
+        type: object
+        properties:
+          accountId:
+            description: e�H�ID
+            x-parameter-location: path
+            type: string
+          amount: &a1
+            format: double
+            minimum: 0
+            type: number
+            example: 10000
+          description: &a2
+            maxLength: 200
+            type: string
+        required:
+          - accountId
+          - amount
+      title: e�
+      x-api-binding:
+        operationPath: /api/v1/accounts/{accountId}/deposit
+        operationMethod: POST
+        api:
+          $path: ./banking-api-mock-spec.yml
+    - name: updateAccountStatus
+      description: �n������	�W~Y
+      inputSchema:
+        type: object
+        properties:
+          accountId:
+            description: �ID
+            x-parameter-location: path
+            type: string
+          status:
+            description: ������
+            x-parameter-location: query
+            type: string
+            enum:
+              - ACTIVE
+              - FROZEN
+              - CLOSED
+        required:
+          - accountId
+          - status
+      title: 㧹����	�
+      x-api-binding:
+        operationPath: /api/v1/accounts/{accountId}/status
+        operationMethod: PUT
+        api:
+          $path: ./banking-api-mock-spec.yml
+    - name: withdrawFromAccount
+      description: ��K�����LD~Y
+      inputSchema:
+        type: object
+        properties:
+          accountId:
+            description: ��C�ID
+            x-parameter-location: path
+            type: string
+          amount: *a1
+          description: *a2
+        required:
+          - accountId
+          - amount
+      title: ��
+      x-api-binding:
+        operationPath: /api/v1/accounts/{accountId}/withdrawal
+        operationMethod: POST
+        api:
+          $path: ./banking-api-mock-spec.yml
+    - name: createCustomer
+      description: ��g��{2W~YcustomerIdo����L�աjW~Y
+      inputSchema:
+        type: object
+        properties:
+          fullName:
+            type: string
+          fullNameKana:
+            type: string
+          dateOfBirth: &a3
+            format: date
+            type: string
+            example: 2022-03-10T00:00:00.000Z
+          phoneNumber:
+            type: string
+          email:
+            format: email
+            type: string
+          postalCode:
+            pattern: ^[0-9]{3}-?[0-9]{4}$
+            type: string
+          address:
+            type: string
+        required:
+          - fullName
+          - fullNameKana
+          - dateOfBirth
+          - phoneNumber
+          - email
+          - postalCode
+          - address
+      title: g�{2
+      x-api-binding:
+        operationPath: /api/v1/customers
+        operationMethod: POST
+        api:
+          $path: ./banking-api-mock-spec.yml
+    - name: updateCustomer
+      description: g��1����W~Y
+      inputSchema:
+        type: object
+        properties:
+          customerId:
+            description: ���ang�ID
+            x-parameter-location: path
+            type: string
+          fullName:
+            type: string
+          fullNameKana:
+            type: string
+          dateOfBirth: *a3
+          phoneNumber:
+            type: string
+          email:
+            format: email
+            type: string
+          postalCode:
+            pattern: ^[0-9]{3}-?[0-9]{4}$
+            type: string
+          address:
+            type: string
+        required:
+          - customerId
+      title: g���
+      x-api-binding:
+        operationPath: /api/v1/customers/{customerId}
+        operationMethod: PATCH
+        api:
+          $path: ./banking-api-mock-spec.yml
+    - name: updateCustomerStatus
+      description: g�n������	�W~Y
+      inputSchema:
+        type: object
+        properties:
+          customerId:
+            description: g�ID
+            x-parameter-location: path
+            type: string
+          status:
+            description: ������
+            x-parameter-location: query
+            type: string
+            enum:
+              - ACTIVE
+              - SUSPENDED
+              - CLOSED
+        required:
+          - customerId
+          - status
+      title: g������	�
+      x-api-binding:
+        operationPath: /api/v1/customers/{customerId}/status
+        operationMethod: PUT
+        api:
+          $path: ./banking-api-mock-spec.yml
+    - name: transferFunds
+      description: �C�K��H�x/��LD~Y
+      inputSchema:
+        type: object
+        properties:
+          fromAccountNumber:
+            pattern: ^[0-9]{7}$
+            type: string
+          toAccountNumber:
+            pattern: ^[0-9]{7}$
+            type: string
+          amount:
+            format: double
+            minimum: 0
+            type: number
+          description:
+            maxLength: 200
+            type: string
+        required:
+          - fromAccountNumber
+          - toAccountNumber
+          - amount
+      title: /�
+      x-api-binding:
+        operationPath: /api/v1/transfers
+        operationMethod: POST
+        api:
+          $path: ./banking-api-mock-spec.yml

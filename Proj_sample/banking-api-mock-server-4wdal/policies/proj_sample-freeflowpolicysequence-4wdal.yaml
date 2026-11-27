@@ -1,0 +1,17 @@
+kind: FreeFlowPolicySequence
+apiVersion: api.ibm.com/v1
+metadata:
+  name: proj_sample-freeflowpolicysequence-4wdal
+  namespace: Proj_sample
+  version: '1.0'
+  tags: []
+  labels:
+    gatewayTypes:
+      - nano
+  domain: mcp
+spec:
+  main:
+    - $ref: Proj_sample:Set-8ld6P:1.0
+    - $ref: Proj_sample:invoke-4wdal:1.0
+  monitoring:
+    $ref: Proj_sample:telemetry-4wdal:1.0

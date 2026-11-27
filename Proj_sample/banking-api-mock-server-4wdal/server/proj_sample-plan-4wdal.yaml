@@ -1,0 +1,14 @@
+kind: Plan
+apiVersion: api.ibm.com/v1
+metadata:
+  name: proj_sample-plan-4wdal
+  namespace: Proj_sample
+  version: "1.0"
+  tags: []
+  description: ""
+  domain: mcp
+spec:
+  qos:
+    withQuota:
+      proj_sample-plan-4wdal-limit:
+        - $ref: Proj_sample:proj_sample-quota-4wdal:1.0

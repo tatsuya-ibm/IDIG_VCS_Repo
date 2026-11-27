@@ -1,0 +1,20 @@
+kind: MCPServer
+apiVersion: api.ibm.com/v1
+metadata:
+  name: banking-authapi-sample
+  namespace: Proj_sample
+  version: '1.0'
+  tags: []
+  domain: mcp
+  labels:
+    origin: mcp-rest
+spec:
+  title: Banking API Mock MCP Server
+  protocolVersion: V2025_11_25
+  plans:
+    - $ref: Proj_sample:proj_sample-plan-q2bby:1.0
+  policy-sequence:
+    - $ref: Proj_sample:proj_sample-freeflowpolicysequence-q2bby:1.0
+  capabilities:
+    tools:
+      - $ref: Proj_sample:banking-api-mock-tool-q2bby:1.0
